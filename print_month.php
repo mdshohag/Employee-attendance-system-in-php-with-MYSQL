@@ -1,9 +1,14 @@
 <?php
+
+
+
+
  session_start();
     require_once('functions/cls_dbconfig.php');
     function __autoload($classname){
       require_once("functions/$classname.class.php");
     }
+
 
 
 error_reporting(0);
@@ -16,8 +21,14 @@ error_reporting(0);
     
   $monthview = $cls_employee->employee_monthly_view($seletmonth, $seletyear);
 
+  
+  
+ob_start();
+
+
 ?>
 
+<html lang="en">
 
    <style type="text/css" media="print">
   
@@ -46,12 +57,13 @@ tr>td{
 
 
    </style>
-
+<body>
 <div class="div-full">
 
 <div class="middle">
-	<center><br><br>
-       <table class="table" width="1920" border="1">
+	<center>
+	<h1><?php echo $seletmonth.'-'.$seletyear; ?></h1>
+       <table class="table" width="1009" border="1">
             <tbody>
 
            <tr>
@@ -230,9 +242,37 @@ tr>td{
 </center>
 </div>
 
-							
+
+
+		
+<?php
+
+$body = ob_get_clean();
+
+$body = iconv("UTF-8","UTF-8//IGNORE",$body);
+
+include('vendor/autoload.php');
+
+ //$mpdf = new \Mpdf\Mpdf('c','A4','','' , 0, 0, 0, 0, 0, 0);
+  
+  
+$mpdf = new \Mpdf\Mpdf();
+//$pdf = new PDF('P','mm','A4');
+$mpdf->AddPage('L');
+
+$mpdf->WriteHTML($body);
+
+$mpdf->Output('DDDsate.pdf', 'D');
+
+
+?>					
+
+	</body>
+
+</html>
+
+<!--
 <script type="text/javascript">
-window.print();
+//window.print();
 </script>
-
-
+-->
